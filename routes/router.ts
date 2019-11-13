@@ -1,42 +1,50 @@
+
 import { Router, Request, Response } from 'express';
 
-
-// * FOR API ENN POINTS
 const router = Router();
 
-router.get('/mensajes',( req: Request , res: Response ) =>{
+
+
+router.get('/mensajes', ( req: Request, res: Response  ) => {
+
     res.json({
         ok: true,
-        mensaje: 'Todo ok!!'
+        mensaje: 'Todo esta bien!!'
     });
+
 });
 
-router.post('/mensajes',( req: Request , res: Response ) =>{
+router.post('/mensajes', ( req: Request, res: Response  ) => {
+
     const cuerpo = req.body.cuerpo;
     const de     = req.body.de;
-    
+
     res.json({
         ok: true,
-       cuerpo,
-       de
+        cuerpo,
+        de
     });
+
 });
 
-router.post('/mensajes/:id',( req: Request , res: Response ) =>{
+
+router.post('/mensajes/:id', ( req: Request, res: Response  ) => {
+
     const cuerpo = req.body.cuerpo;
     const de     = req.body.de;
     const id     = req.params.id;
-    
+
     res.json({
         ok: true,
-       cuerpo,
-       de,
-       id
+        cuerpo,
+        de,
+        id
     });
+
 });
-
-
 
 
 
 export default router;
+
+
