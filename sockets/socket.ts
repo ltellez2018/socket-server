@@ -12,18 +12,20 @@ export const usuariosConectados = new UsuariosLista();
 // **************************************************** //
 // ***          'Confoguring user'                  *** //
 // **************************************************** //
-export const conectarCliente = ( client: Socket ) => {
+export const conectarCliente = ( client: Socket, io: socketIO.Server ) => {
     const usuario = new Usuario (client.id);
     usuariosConectados.agregar(usuario);
+    
 }
 
 // **************************************************** //
 // ***   'Disconecting Client'                      *** //
 // **************************************************** //    
-export const desconectar = ( cliente: Socket) =>{
+export const desconectar = ( cliente: Socket, io: socketIO.Server) =>{
     cliente.on('disconnect',()=>{
         console.log('Cliente desconectado');   
-        usuariosConectados.borrarUsuario(cliente.id);          
+        usuariosConectados.borrarUsuario(cliente.id); 
+        io.emit('usuarios-activos',usuariosConectados.obtenerLista());         
     });
 };
 
@@ -47,6 +49,7 @@ export const configurarUsauruo = (cliente: Socket, io: socketIO.Server) =>{
     cliente.on('configurar-usuario', (payload: {nombre: string}, callback : Function )=>{
             
             usuariosConectados.actualizarNombre(cliente.id , payload.nombre );
+            io.emit('usuarios-activos',usuariosConectados.obtenerLista());         
             callback({
                 ok: true,
                 mensaje: `Usuario ${ payload.nombre} configurado`
@@ -56,4 +59,17 @@ export const configurarUsauruo = (cliente: Socket, io: socketIO.Server) =>{
     });
 };
 
+// **************************************************** //
+// ***           'Get Usuarios'                    *** //
+// **************************************************** //
 
+
+export const obtenerUsuarios = (cliente: Socket, io: socketIO.Server) =>{
+    cliente.on('usuarios-conectados', ()=>{
+               
+          
+            io.to(cliente.id).emit('usuarios-activos',usuariosConectados.obtenerLista());         
+
+            
+    });
+};
